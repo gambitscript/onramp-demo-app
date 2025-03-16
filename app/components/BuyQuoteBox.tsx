@@ -18,9 +18,12 @@ import {
   BuyQuoteResponse,
 } from "../utils/types";
 import { generateBuyOptions, generateBuyQuote } from "../utils/queries";
-import ReactJson from "react-json-view";
 import { BuyConfigBox } from "./BuyConfigBox";
 import SecureTokenBox from "./SecureTokenBox";
+import dynamic from "next/dynamic";
+const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
+const JsonViewer = ReactJson as unknown as React.FC<{ src: any; collapsed: boolean }>;
+
 
 const emptyBuyQuoteParams: BuyQuoteRequest = {
   purchase_currency: "",
@@ -315,7 +318,7 @@ export default function BuyQuoteBox() {
                   {isOptionsLoading
                     ? "loading..."
                     : buyOptionsResponse && (
-                        <ReactJson collapsed={true} src={buyOptionsResponse} />
+                        <JsonViewer collapsed={true} src={buyOptionsResponse} />
                       )}
                 </Card>
               </div>

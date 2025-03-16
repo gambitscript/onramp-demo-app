@@ -39,8 +39,8 @@ export async function createRequest({
     algorithm: "ES256",
     header: {
       kid: key_name,
-      nonce: crypto.randomBytes(16).toString("hex"), // non-standard, coinbase-specific header that is necessary
-    },
+      nonce: crypto.randomBytes(16).toString("hex"), // Coinbase-specific, not a standard JWT header
+    } as any, // 👈 Cast the header to `any` to bypass TypeScript restrictions
   };
 
   const jwt = sign(payload, key_secret, signOptions);

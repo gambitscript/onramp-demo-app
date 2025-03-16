@@ -1,3 +1,4 @@
+"use client";
 import { Button, Card, Link, Select, SelectItem } from "@nextui-org/react";
 import {
   Dispatch,
@@ -7,9 +8,12 @@ import {
   useRef,
   useState,
 } from "react";
-import ReactJson from "react-json-view";
 import { generateBuyConfig } from "../utils/queries";
 import { BuyConfigResponse } from "../utils/types";
+import dynamic from "next/dynamic";
+const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
+const JsonViewer = ReactJson as unknown as React.FC<{ src: any; collapsed: boolean }>;
+
 
 export function BuyConfigBox({
   buyConfig,
@@ -22,7 +26,9 @@ export function BuyConfigBox({
 
   const buyConfigHeaderRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
-    buyConfigHeaderRef.current = document.getElementById("buyConfigHeader");
+    if (document) {
+      buyConfigHeaderRef.current = document.getElementById("buyConfigHeader");
+    }
   }, []);
 
   const buyConfigurationWrapper = async () => {
@@ -68,7 +74,7 @@ export function BuyConfigBox({
         <Card className="w-full p-5">
           {configLoading
             ? "loading..."
-            : buyConfig && <ReactJson collapsed={true} src={buyConfig} />}
+            : buyConfig && <JsonViewer collapsed={true} src={buyConfig} />}
         </Card>
       </div>
     </Card>

@@ -18,9 +18,12 @@ import {
   SellQuoteResponse,
 } from "../utils/types";
 import { generateSellOptions, generateSellQuote } from "../utils/queries";
-import ReactJson from "react-json-view";
 import { SellConfigBox } from "./SellConfigBox";
 import SecureTokenBox from "./SecureTokenBox";
+import dynamic from "next/dynamic";
+
+const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
+const JsonViewer = ReactJson as unknown as React.FC<{ src: any; collapsed: boolean }>;
 
 const emptySellQuoteParams: SellQuoteRequest = {
   sell_amount: "",
@@ -309,7 +312,7 @@ export default function SellQuoteBox() {
                   {isOptionsLoading
                     ? "loading..."
                     : sellOptionsResponse && (
-                        <ReactJson collapsed={true} src={sellOptionsResponse} />
+                        <JsonViewer collapsed={true} src={sellOptionsResponse} />
                       )}
                 </Card>
               </div>
@@ -538,7 +541,7 @@ export default function SellQuoteBox() {
                   {isQuoteLoading
                     ? "loading..."
                     : sellQuoteResponse && (
-                        <ReactJson collapsed={true} src={sellQuoteResponse} />
+                        <JsonViewer collapsed={true} src={sellQuoteResponse} />
                       )}
                 </Card>
               </div>

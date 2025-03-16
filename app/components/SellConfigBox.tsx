@@ -1,3 +1,4 @@
+"use client";
 import { Button, Card, Link, Select, SelectItem } from "@nextui-org/react";
 import {
   Dispatch,
@@ -7,9 +8,12 @@ import {
   useRef,
   useState,
 } from "react";
-import ReactJson from "react-json-view";
 import { generateSellConfig } from "../utils/queries";
 import { SellConfigResponse } from "../utils/types";
+import dynamic from "next/dynamic";
+const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
+const JsonViewer = ReactJson as unknown as React.FC<{ src: any; collapsed: boolean }>;
+
 
 export function SellConfigBox({
   sellConfig,
@@ -22,7 +26,9 @@ export function SellConfigBox({
 
   const sellConfigHeaderRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
-    sellConfigHeaderRef.current = document.getElementById("sellConfigHeader");
+    if (typeof window !== "undefined") {
+      sellConfigHeaderRef.current = document.getElementById("sellConfigHeader");
+    }
   }, []);
 
   const sellConfigurationWrapper = async () => {
@@ -68,7 +74,7 @@ export function SellConfigBox({
         <Card className="w-full p-5">
           {configLoading
             ? "loading..."
-            : sellConfig && <ReactJson collapsed={true} src={sellConfig} />}
+            : sellConfig && <JsonViewer collapsed={true} src={sellConfig} />}
         </Card>
       </div>
     </Card>
